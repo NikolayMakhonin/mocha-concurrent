@@ -1,0 +1,34 @@
+import type { IRunner, ISuite, ITest, TestFunc } from './contracts';
+export declare class SuiteDefault implements ISuite {
+    constructor(file: string, parent: ISuite | null, title: string, skip: boolean, isRoot?: boolean);
+    readonly type = "suite";
+    readonly title: string;
+    readonly root: boolean;
+    readonly skip: boolean;
+    readonly suites: ISuite[];
+    readonly tests: ITest[];
+    private readonly _afterAll;
+    private readonly _afterEach;
+    private readonly _beforeAll;
+    private readonly _beforeEach;
+    private readonly _onlySuites;
+    private readonly _onlyTests;
+    readonly parent: ISuite | undefined;
+    readonly file: string | undefined;
+    private _timeout;
+    pending: boolean;
+    addSuite(suite: ISuite): this;
+    addTest(test: ITest): this;
+    afterAll(fn: TestFunc): this;
+    afterEach(fn: TestFunc): this;
+    beforeAll(fn: TestFunc): this;
+    beforeEach(fn: TestFunc): this;
+    fullTitle(separator?: string): string;
+    isPending(): boolean;
+    timeout(): number;
+    timeout(ms: number): this;
+    titlePath(): string[];
+    total(): number;
+    runTest(runner: IRunner, skip: boolean, test: ITest): Promise<void>;
+    run(runner: IRunner, skip: boolean): Promise<void>;
+}
