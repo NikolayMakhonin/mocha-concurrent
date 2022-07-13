@@ -105,8 +105,10 @@ export class SuiteDefault implements ISuite {
       skip = test.skip
     }
 
+    runner.stats.tests++
     if (skip) {
       test.pending = true
+      runner.stats.pending++
       runner.emit(RunnerConstants.EVENT_TEST_PENDING, test)
       return
     }
@@ -123,6 +125,7 @@ export class SuiteDefault implements ISuite {
     }
     catch (err) {
       console.error('Error beforeEach: ' + this.fullTitle(' > '))
+      runner.stats.failures++
       runner.emit(RunnerConstants.EVENT_HOOK_END, test)
       throw err
     }
@@ -135,6 +138,7 @@ export class SuiteDefault implements ISuite {
       test.duration = Date.now() - startTime
       console.error('Error test: ' + test.fullTitle(' > '))
       test.err = err
+      runner.stats.failures++
       runner.emit(RunnerConstants.EVENT_TEST_FAIL, test, err)
       runner.emit(RunnerConstants.EVENT_TEST_END, test)
       throw err
@@ -149,12 +153,14 @@ export class SuiteDefault implements ISuite {
     }
     catch (err) {
       console.error('Error afterEach: ' + this.fullTitle(' > '))
+      runner.stats.failures++
       runner.emit(RunnerConstants.EVENT_HOOK_END, test)
       throw err
     }
 
     // console.log(`End (${((Date.now() - startTime) / 1000).toFixed(3)} sec): ${test.fullTitle(' > ')}`)
 
+    runner.stats.passes++
     runner.emit(RunnerConstants.EVENT_TEST_PASS, test)
     runner.emit(RunnerConstants.EVENT_TEST_END, test)
   }
@@ -164,8 +170,10 @@ export class SuiteDefault implements ISuite {
       skip = this.skip
     }
 
-    runner.emit(RunnerConstants.EVENT_SUITE_BEGIN, this)
+    runner.stats.suites++
     const startTime = Date.now()
+    runner.stats.start = startTime
+    runner.emit(RunnerConstants.EVENT_SUITE_BEGIN, this)
     try {
       this.pending = skip
       try {
@@ -200,7 +208,11 @@ export class SuiteDefault implements ISuite {
       }
     }
     finally {
-      console.debug(`${this.fullTitle(' > ') || 'All Tests'}: ${((Date.now() - startTime) / 1000).toFixed(3)} sec`)
+      const endTime = Date.now()
+      const duration = endTime - startTime
+      console.debug(`${this.fullTitle(' > ') || 'All Tests'}: ${(duration / 1000).toFixed(3)} sec`)
+      runner.stats.end = endTime
+      runner.stats.duration = duration
       runner.emit(RunnerConstants.EVENT_SUITE_END, this)
     }
   }
