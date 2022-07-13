@@ -235,14 +235,14 @@ const browserTestsConfig = {
 
 export default [
   nodeConfig({
-    input    : ['src/**/*.ts'],
+    input    : ['src/**/*.ts', '!**/*.d.ts'],
     outputDir: 'dist/lib',
     relative : 'src',
     format   : 'es',
     extension: 'mjs',
   }),
   nodeConfig({
-    input    : ['src/**/*.ts'],
+    input    : ['src/**/*.ts', '!**/*.d.ts'],
     outputDir: 'dist/lib',
     relative : 'src',
     format   : 'cjs',

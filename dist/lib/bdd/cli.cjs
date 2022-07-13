@@ -18,6 +18,7 @@ require('path');
 require('./loadModule.cjs');
 require('url');
 require('./ReporterConsole.cjs');
+require('kleur');
 require('./RunnerDefault.cjs');
 require('eventemitter3');
 

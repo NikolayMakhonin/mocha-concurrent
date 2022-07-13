@@ -3,6 +3,11 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var bdd_contracts = require('./contracts.cjs');
+var kleur = require('kleur');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var kleur__default = /*#__PURE__*/_interopDefaultLegacy(kleur);
 
 class ReporterConsole {
     constructor(runner) {
@@ -10,30 +15,36 @@ class ReporterConsole {
         const stats = runner.stats;
         runner
             .once(bdd_contracts.RunnerConstants.EVENT_RUN_BEGIN, () => {
-            console.log('start');
+            // console.log(kleur.cyan('Started: All Tests'))
         })
-            .on(bdd_contracts.RunnerConstants.EVENT_SUITE_BEGIN, () => {
+            .on(bdd_contracts.RunnerConstants.EVENT_SUITE_BEGIN, (suite) => {
             this.increaseIndent();
-        })
-            .on(bdd_contracts.RunnerConstants.EVENT_TEST_BEGIN, test => {
-            // TODO
+            // console.log(kleur.cyan(`Started: ${suite.fullTitle(' > ') || 'All Tests'}`))
         })
             .on(bdd_contracts.RunnerConstants.EVENT_TEST_PENDING, test => {
-            // TODO
+            console.log(kleur__default["default"].gray(`Skipped: ${test.fullTitle(' > ')}`));
+        })
+            .on(bdd_contracts.RunnerConstants.EVENT_TEST_BEGIN, test => {
+            console.log(kleur__default["default"].blue(`Started: ${test.fullTitle(' > ')}`));
         })
             .on(bdd_contracts.RunnerConstants.EVENT_TEST_PASS, test => {
-            // Test#fullTitle() returns the suite name(s)
-            // prepended to the test title
-            console.log(`${this.indent()}pass: ${test.fullTitle(' > ')}`);
+            console.log(kleur__default["default"].green(`Passed: ${test.fullTitle(' > ')}`));
         })
             .on(bdd_contracts.RunnerConstants.EVENT_TEST_FAIL, (test, err) => {
-            console.log(`${this.indent()}fail: ${test.fullTitle(' > ')} - error: ${err.message}`);
+            console.log(kleur__default["default"].red(`Failed: ${test.fullTitle(' > ')}: ${err.message}`));
         })
             .on(bdd_contracts.RunnerConstants.EVENT_SUITE_END, () => {
             this.decreaseIndent();
         })
             .once(bdd_contracts.RunnerConstants.EVENT_RUN_END, () => {
-            console.log(`end: ${stats.passes}/${stats.passes + stats.failures} ok`);
+            let message = `End: All Tests (${stats.duration} sec) ${stats.passes}/${stats.passes + stats.failures} ok`;
+            if (stats.failures) {
+                message = kleur__default["default"].red(message);
+            }
+            else {
+                message = kleur__default["default"].green(message);
+            }
+            console.log(kleur__default["default"].bold(message));
         });
     }
     indent() {

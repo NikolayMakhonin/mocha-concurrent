@@ -11,15 +11,15 @@ declare function _beforeAll(func: TestFunc): void;
 declare function _afterAll(func: TestFunc): void;
 declare function _beforeEach(func: TestFunc): void;
 declare function _afterEach(func: TestFunc): void;
-declare global {
-    const assert: typeof _assert;
-    const it: typeof _it;
-    const describe: typeof _describe;
-    const xdescribe: typeof _xdescribe;
-    const xit: typeof _xit;
-    const beforeAll: typeof _beforeAll;
-    const afterAll: typeof _afterAll;
-    const beforeEach: typeof _beforeEach;
-    const afterEach: typeof _afterEach;
-}
+export declare type Globals = {
+    assert: typeof _assert;
+    it: typeof _it;
+    describe: typeof _describe;
+    xdescribe: typeof _xdescribe;
+    xit: typeof _xit;
+    beforeAll: typeof _beforeAll;
+    afterAll: typeof _afterAll;
+    beforeEach: typeof _beforeEach;
+    afterEach: typeof _afterEach;
+};
 export {};

@@ -1,4 +1,5 @@
 import { RunnerConstants } from './contracts.mjs';
+import kleur from 'kleur';
 
 class ReporterConsole {
     constructor(runner) {
@@ -6,30 +7,36 @@ class ReporterConsole {
         const stats = runner.stats;
         runner
             .once(RunnerConstants.EVENT_RUN_BEGIN, () => {
-            console.log('start');
+            // console.log(kleur.cyan('Started: All Tests'))
         })
-            .on(RunnerConstants.EVENT_SUITE_BEGIN, () => {
+            .on(RunnerConstants.EVENT_SUITE_BEGIN, (suite) => {
             this.increaseIndent();
-        })
-            .on(RunnerConstants.EVENT_TEST_BEGIN, test => {
-            // TODO
+            // console.log(kleur.cyan(`Started: ${suite.fullTitle(' > ') || 'All Tests'}`))
         })
             .on(RunnerConstants.EVENT_TEST_PENDING, test => {
-            // TODO
+            console.log(kleur.gray(`Skipped: ${test.fullTitle(' > ')}`));
+        })
+            .on(RunnerConstants.EVENT_TEST_BEGIN, test => {
+            console.log(kleur.blue(`Started: ${test.fullTitle(' > ')}`));
         })
             .on(RunnerConstants.EVENT_TEST_PASS, test => {
-            // Test#fullTitle() returns the suite name(s)
-            // prepended to the test title
-            console.log(`${this.indent()}pass: ${test.fullTitle(' > ')}`);
+            console.log(kleur.green(`Passed: ${test.fullTitle(' > ')}`));
         })
             .on(RunnerConstants.EVENT_TEST_FAIL, (test, err) => {
-            console.log(`${this.indent()}fail: ${test.fullTitle(' > ')} - error: ${err.message}`);
+            console.log(kleur.red(`Failed: ${test.fullTitle(' > ')}: ${err.message}`));
         })
             .on(RunnerConstants.EVENT_SUITE_END, () => {
             this.decreaseIndent();
         })
             .once(RunnerConstants.EVENT_RUN_END, () => {
-            console.log(`end: ${stats.passes}/${stats.passes + stats.failures} ok`);
+            let message = `End: All Tests (${stats.duration} sec) ${stats.passes}/${stats.passes + stats.failures} ok`;
+            if (stats.failures) {
+                message = kleur.red(message);
+            }
+            else {
+                message = kleur.green(message);
+            }
+            console.log(kleur.bold(message));
         });
     }
     indent() {

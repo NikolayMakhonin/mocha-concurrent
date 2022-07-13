@@ -16,6 +16,7 @@ require('assert');
 require('globby');
 require('path');
 require('url');
+require('kleur');
 require('eventemitter3');
 
 async function runTests({ watch, timeout, reporterPath, filesGlobs, grep, }) {

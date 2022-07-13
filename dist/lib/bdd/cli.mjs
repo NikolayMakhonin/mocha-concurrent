@@ -14,6 +14,7 @@ import 'path';
 import './loadModule.mjs';
 import 'url';
 import './ReporterConsole.mjs';
+import 'kleur';
 import './RunnerDefault.mjs';
 import 'eventemitter3';
 

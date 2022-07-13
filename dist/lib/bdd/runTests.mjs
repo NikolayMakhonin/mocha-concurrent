@@ -12,6 +12,7 @@ import 'assert';
 import 'globby';
 import 'path';
 import 'url';
+import 'kleur';
 import 'eventemitter3';
 
 async function runTests({ watch, timeout, reporterPath, filesGlobs, grep, }) {
